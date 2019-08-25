@@ -1,0 +1,70 @@
+- name: Ensure jenkins_home {{ jenkins_home }} exists
+  file:
+    path: "{{ jenkins_home }}"
+    state: directory
+    owner: jenkins
+    group: jenkins
+    mode: u+rwx
+    follow: true
+
+- name: Create custom init scripts directory.
+  file:
+    path: "{{ jenkins_home }}/init.groovy.d"
+    state: directory
+    owner: "{{ jenkins_process_user }}"
+    group: "{{ jenkins_process_group }}"
+    mode: 0775
+
+- name: Configure Default Users
+  template:
+    src: basic-security.groovy.j2
+    dest: "{{ jenkins_home }}/init.groovy.d/basic-security.groovy"
+    owner: "{{ jenkins_process_user }}"
+    group: "{{ jenkins_process_group }}"
+    mode: 0775
+  register: jenkins_bootstrap
+
+- name: Copy Jenkins Bootstrap scripts
+  copy:
+    src: "{{ item }}"
+    dest: "{{ jenkins_home }}/init.groovy.d/{{ item }}"
+  with_items:
+    - configure-csrf-protection.groovy
+    - configure-jenkins-settings.groovy
+    - configure-jenkins-instance.groovy
+    - configure-job-dsl-security.groovy
+    - disable-jenkins-cli.groovy
+    - slave-to-master-access-controll.groovy
+    - set-content-security-policy.groovy
+  register: jenkins_bootstrap
+
+- name: Restart Jenkins when groovy scripts changed
+  service:
+    name: jenkins
+    state: restarted
+  when: >
+    jenkins_bootstrap is defined and jenkins_bootstrap.changed
+
+- name: Wait for Jenkins to start up
+  uri:
+    url: "http://{{ jenkins_hostname }}:{{ jenkins_http_port }}{{ jenkins_url_prefix }}"
+    status_code: '200'
+    timeout: 5
+    force_basic_auth: yes
+    url_username: "{{ jenkins_admin_username }}"
+    url_password: "{{ jenkins_admin_password }}"
+  register: jenkins_service_status
+  retries: "{{ jenkins_connection_retries }}"
+  delay: "{{ jenkins_connection_delay }}"
+  until: >
+    'status' in jenkins_service_status and
+    jenkins_service_status['status'] == 200
+  when: >
+    jenkins_bootstrap is defined and jenkins_bootstrap.changed
+
+- name: Remove Jenkins init scripts after first startup.
+  file:
+    path: "{{ jenkins_home }}/init.groovy.d/{{ item }}"
+    state: absent
+  with_items:
+    - basic-security.groovy
