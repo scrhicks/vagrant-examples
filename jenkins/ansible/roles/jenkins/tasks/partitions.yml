@@ -1,0 +1,32 @@
+- name: Create jenkins partitions
+  parted:
+    device: "{{ item }}"
+    number: 1
+    state: present
+  with_items:
+    - /dev/sdc
+    - /dev/sdd
+
+- name: Create a ext4 filesystem on /dev/sdc1 and /dev/sdd1
+  filesystem:
+    fstype: ext4
+    dev: "{{ item }}"
+  with_items:
+    - /dev/sdc1
+    - /dev/sdd1
+
+- name: Mount jenkins home partition
+  mount:
+    path: "{{ jenkins_home }}"
+    src: /dev/sdc1
+    opts: noatime,nobarrier
+    fstype: ext4
+    state: mounted
+
+- name: Mount jenkins build partition
+  mount:
+    path: /var/lib/jenkins_builds
+    src: /dev/sdd1
+    opts: noatime,nobarrier
+    fstype: ext4
+    state: mounted

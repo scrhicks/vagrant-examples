@@ -1,5 +1,8 @@
 ---
 
+- name: Create partitions and mount drives
+  include: partitions.yml
+
 - name: Install Jenkins
   include: install.yml
 
