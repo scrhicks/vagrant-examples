@@ -11,3 +11,6 @@
 
 - name: Install plugins
   include: plugins.yml
+
+- name: Create DSL job
+  include: create_dsl_job.yml

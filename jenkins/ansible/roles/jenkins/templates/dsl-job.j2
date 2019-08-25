@@ -1,0 +1,25 @@
+import com.cloudbees.groovy.cps.NonCPS
+import hudson.model.FreeStyleProject
+import hudson.plugins.git.*;
+
+def parent = Jenkins.getInstance()
+def project = new FreeStyleProject(parent, '{{ jenkins_dsl_job_name }}');
+project.setDescription("Jenkins DSL Provisioning Job")
+
+def parameterDefinitions = new ArrayList<ParameterDefinition>();
+parameterDefinitions.add(new ChoiceParameterDefinition("REPO_URL", "{{ jenkins_dsl_repository_url }}", "The repository URL"))
+parameterDefinitions.add(new StringParameterDefinition("BRANCH", "{{ jenkins_dsl_repository_branch }}", "The branch name"))
+def jobProperty = new ParametersDefinitionProperty(parameterDefinitions)
+project.addProperty(jobProperty)
+
+def scm = new GitSCM("\$REPO_URL")
+scm.branches = [new BranchSpec("\$BRANCH")];
+project.setScm(scm)
+
+def dslDefinition = new javaposse.jobdsl.plugin.ExecuteDslScripts()
+dslDefinition.setTargets('jobs/**/*.groovy')
+project.getBuildersList().add(dslDefinition)
+
+project.save()
+parent.reload()
+        
