@@ -1,0 +1,13 @@
+---
+
+- name: Get docker swarm worker token
+  shell: docker swarm join-token -q worker
+  delegate_to: '{{ manager_leader_ip_addr }}'
+  delegate_facts: yes
+  register: worker_token
+
+- name: Join as a worker
+  shell: "docker swarm join --token {{ worker_token.stdout }} {{ manager_leader_ip_addr }}:2377"
+  when: "docker_info.stdout.find('Swarm: inactive') != -1"
+  retries: 3
+  delay: 20

@@ -1,0 +1,45 @@
+- name: Get Docker FS stats
+  stat:
+    path: /var/lib/docker
+  register: docker_fs
+  tags:
+    - lvm
+
+- name: Create a DATA LVM group
+  lvg:
+    vg: data
+    pvs: /dev/sdc
+    state: present
+  tags:
+    - lvm
+
+- name: Create a logical DOCKER FS
+  lvol:
+    vg: data
+    lv: docker
+    size: +80%VG
+    state: present
+  when: docker_fs.stat.exists == false
+  tags:
+    - lvm
+
+- name: Create a DOCKER FS
+  filesystem:
+    fstype: ext4
+    dev: "/dev/data/docker"
+    opts: -m 0
+  when: docker_fs.stat.exists == false
+  tags:
+    - lvm
+
+- name: Add the DOCKER FS to fstab
+  mount:
+    src: /dev/data/docker
+    path: /var/lib/docker
+    fstype: ext4
+    boot: yes
+    opts: defaults
+    state: mounted
+    backup: yes
+  tags:
+    - lvm

@@ -1,0 +1,24 @@
+---
+- name: worker01
+  hostname: worker01.dev.local
+  ip_addr: 192.168.56.21
+  playbook: playbooks/swarm-join.yml
+  cpu: 1
+  memory: 2048
+  disk_size: 10240
+
+- name: worker02
+  hostname: worker02.dev.local
+  ip_addr: 192.168.56.22
+  playbook: playbooks/swarm-join.yml
+  cpu: 1
+  memory: 2048
+  disk_size: 10240
+
+- name: worker03
+  hostname: worker03.dev.local
+  ip_addr: 192.168.56.23
+  playbook: playbooks/swarm-join.yml
+  cpu: 1
+  memory: 2048
+  disk_size: 10240

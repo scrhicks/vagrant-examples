@@ -1,0 +1,5 @@
+- name: Create LVM
+  include: lvm.yml
+
+- name: Install Docker
+  include: docker.yml

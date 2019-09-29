@@ -1,0 +1,13 @@
+---
+
+- name: Get Docker info
+  shell: docker info
+  register: docker_info
+
+- name: Join as manager
+  include: manager.yml
+  when: "join_as == 'manager'"
+
+- name: Join as worker
+  include: worker.yml
+  when: "join_as == 'worker'"
