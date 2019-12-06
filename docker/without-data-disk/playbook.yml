@@ -1,0 +1,10 @@
+- hosts: all
+  become: yes
+  roles:
+    - pogosoftware.docker
+  vars:
+    docker:
+      install_docker_compose: yes
+      docker_compose_version: '1.24.1'
+      users:
+        - vagrant
