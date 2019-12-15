@@ -1,0 +1,68 @@
+- hosts: all
+  become: yes
+  roles:
+    - pogosoftware.lvm
+    - pogosoftware.self_signed_cert
+    - ravendb
+  vars:
+    vgs:
+      - vg: data
+        pvs: /dev/sdc
+        lvs:
+          - lv: ravendb
+            size: +80%VG
+            path: /var/lib/ravendb
+   
+    self_signed_cert:
+      cfssl_version: 'R1.2'
+      cfssl_os: linux
+      cfssl_os_arch: amd64
+          
+      output_dir: /vagrant/certs
+
+      server_expiry: 2190h
+      client_expiry: 2190h
+      
+      cn: ravendb.internal
+      sans:
+        - 1.ravendb.internal
+        - 2.ravendb.internal
+        - 3.ravendb.internal
+
+      key_algo: rsa
+      key_size: 4096
+
+      country: IL
+      location: Israel
+      organisation: 'Hibernating Rhinos LTD'
+      organisation_unit: CA
+      state: Karkur
+
+      trust_ca_cert: true
+   
+    ravendb:
+      setup:
+        version: '4.2.4'
+        install_dir: /opt
+        user: root
+        group: root
+
+        settings:
+          setup_mode: Secured
+          data_dir: /var/lib/ravendb
+          server_url: https://{{ ip_addr }}:443
+          server_url_tcp: tcp://{{ ip_addr }}:38888
+          public_server_url: https://{{ hostname }}:443
+          public_server_url_tcp: tcp://{{ hostname }}:38888
+          license_eula_accepted: true
+          license_path: /vagrant/licenses/developer.lic
+          security_certificate_path: /vagrant/certs/server.pfx
+          security_certificate_password:
+          logs_path: /var/log/ravendb
+          logs_mode: Operations
+          logs_use_utc_time: true
+          logs_max_file_size_in_mb: 128
+          logs_retention_time_in_hrs: 72
+      
+      rvn:
+        trust_client_cert: /vagrant/certs/client.pfx

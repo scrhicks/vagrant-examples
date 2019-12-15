@@ -1,0 +1,9 @@
+---
+
+- name: Copy exp file
+  template:
+    src: rvn/trustClientCert.exp.j2
+    dest: /tmp/trustClientCert.exp
+
+- name: Trust client certificate
+  command: expect /tmp/trustClientCert.exp

@@ -1,0 +1,27 @@
+---
+
+- name: Download RavenDB
+  get_url:
+    url: "https://daily-builds.s3.amazonaws.com/RavenDB-{{ ravendb.setup.version }}-linux-x64.tar.bz2"
+    dest: /tmp/ravendb.tar.bz2
+
+- name: "Extract RavenDB into {{ ravendb.setup.install_dir }}"
+  unarchive:
+    src: /tmp/ravendb.tar.bz2
+    dest: "{{ ravendb.setup.install_dir }}"
+
+- name: "Copy RavenDB settings file to {{ ravendb.setup.install_dir }}/RavenDB/Server/settings.json"
+  template:
+    src: setup/settings.json.j2
+    dest: "{{ ravendb.setup.install_dir }}/RavenDB/Server/settings.json"
+
+- name: Copy Service File
+  template:
+    src: setup/ravendb.service.j2
+    dest: /etc/systemd/system/ravendb.service
+
+- name: Start and enable the RavenDB service
+  service:
+    name: ravendb.service
+    state: started
+    enabled: yes

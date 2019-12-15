@@ -1,0 +1,17 @@
+---
+
+- name: Bootstrap cluster
+  uri:
+    url: "https://{{ ravendb.cluster.bootstrap.node_address}}/admin/cluster/bootstrap"
+    method: POST
+    client_cert: "{{ ravendb.cluster.client_pem_cert }}"
+    client_key: "/vagrant/certs/ca-key.pem"
+  when: ravendb.cluster.bootstrap is defined
+
+- name: Join node to the cluster
+  uri:
+    url: "http://{{ ravendb.cluster.join_node.master_node_address }}/admin/cluster/node?url=https://{{ item }}"
+    method: PUT
+    client_cert: "{{ ravendb.cluster.join_node.client_pem_cert }}"
+  with_items: "{{ ravendb.cluster.join_node.node_addresses }}"
+  when: ravendb.cluster.join_node is defined

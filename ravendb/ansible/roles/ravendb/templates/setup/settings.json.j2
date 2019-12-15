@@ -1,0 +1,50 @@
+{
+  {% if ravendb.setup.settings.data_dir is defined %}
+    "DataDir": "{{ ravendb.setup.settings.data_dir }}",
+  {% endif %}
+  {% if ravendb.setup.settings.license_eula_accepted is defined %}
+    "License.Eula.Accepted": {{ ravendb.setup.settings.license_eula_accepted | lower }},
+  {% endif %}
+  {% if ravendb.setup.settings.license_path is defined %}
+    "License.Path": "{{ ravendb.setup.settings.license_path }}",
+  {% endif %}
+  {% if ravendb.setup.settings.setup_mode is defined %}
+    "Setup.Mode": "{{ ravendb.setup.settings.setup_mode }}",
+  {% endif %}
+  {% if ravendb.setup.settings.security_certificate_path is defined %}
+    "Security.Certificate.Path": "{{ ravendb.setup.settings.security_certificate_path }}",
+  {% endif %}
+  {% if ravendb.setup.settings.security_certificate_password is defined %}
+    "Security.Certificate.Password": "{{ ravendb.setup.settings.security_certificate_password }}",
+  {% endif %}
+  {% if ravendb.setup.settings.cluster_election_timeout_in_ms is defined %}
+    "Cluster.ElectionTimeoutInMs": "{{ ravendb.setup.settings.cluster_election_timeout_in_ms }}",
+  {% endif %}
+  {% if ravendb.setup.settings.logs_path is defined %}
+    "Logs.Path": "{{ ravendb.setup.settings.logs_path }}",
+  {% endif %}
+  {% if ravendb.setup.settings.logs_mode is defined %}
+    "Logs.Mode": "{{ ravendb.setup.settings.logs_mode }}",
+  {% endif %}
+  {% if ravendb.setup.settings.logs_use_utc_time is defined %}
+    "Logs.UseUtcTime": "{{ ravendb.setup.settings.logs_use_utc_time }}",
+  {% endif %}
+  {% if ravendb.setup.settings.logs_max_file_size_in_mb is defined %}
+    "Logs.MaxFileSizeInMb": "{{ ravendb.setup.settings.logs_max_file_size_in_mb }}",
+  {% endif %}
+  {% if ravendb.setup.settings.logs_retention_time_in_hrs is defined %}
+    "Logs.RetentionTimeInHrs": "{{ ravendb.setup.settings.logs_retention_time_in_hrs }}",
+  {% endif %}
+  {% if ravendb.setup.settings.server_url is defined %}
+    "ServerUrl": "{{ ravendb.setup.settings.server_url }}",
+  {% endif %}
+  {% if ravendb.setup.settings.server_url_tcp is defined %}
+    "ServerUrl.Tcp": "{{ ravendb.setup.settings.server_url_tcp }}",
+  {% endif %}
+  {% if ravendb.setup.settings.public_server_url is defined %}
+    "PublicServerUrl": "{{ ravendb.setup.settings.public_server_url }}",
+  {% endif %}
+  {% if ravendb.setup.settings.public_server_url_tcp is defined %}
+    "PublicServerUrl.Tcp": "{{ ravendb.setup.settings.public_server_url_tcp }}"
+  {% endif %}
+}

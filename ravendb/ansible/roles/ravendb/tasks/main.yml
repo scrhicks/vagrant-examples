@@ -1,0 +1,9 @@
+---
+
+- name: Setup RavenDB
+  include: setup/main.yml
+  when: ravendb.setup is defined
+
+- name: rvn
+  include: rvn/main.yml
+  when: ravendb.rvn is defined

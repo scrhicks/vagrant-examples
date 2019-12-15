@@ -1,4 +1,10 @@
 .vagrant/
 disks/
-*.log
+certs/
+licenses/
+
 *.vdi
+*.pem
+*.pfx
+*.csr
+*.log

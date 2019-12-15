@@ -1,0 +1,11 @@
+---
+
+- name: Install expect
+  apt:
+    name: expect
+    state: present
+  when: ravendb.rvn.trust_client_cert is defined
+
+- name: Trust client certificate
+  include: trust_client_cert.yml
+  when: ravendb.rvn.trust_client_cert is defined

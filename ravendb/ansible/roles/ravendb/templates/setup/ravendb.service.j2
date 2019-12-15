@@ -1,0 +1,21 @@
+[Unit]
+Description=RavenDB v4.0
+After=network.target
+
+[Service]
+LimitCORE=infinity
+LimitNOFILE=65536
+LimitRSS=infinity
+LimitAS=infinity
+Restart=on-failure
+Type=simple
+ExecStart=/opt/RavenDB/run.sh
+{% if ravendb.setup.user is defined %}
+User={{ ravendb.setup.user }}
+{% endif %}
+{% if ravendb.setup.group is defined %}
+Group={{ ravendb.setup.group }}
+{% endif %}
+
+[Install]
+WantedBy=multi-user.target

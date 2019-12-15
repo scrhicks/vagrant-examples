@@ -1,0 +1,21 @@
+---
+- name: ravendb1
+  hostname: 1.ravendb.internal
+  ip_addr: 192.168.56.11
+  cpu: 1
+  memory: 2048
+  disk_size: 10240
+
+- name: ravendb2
+  hostname: 2.ravendb.internal
+  ip_addr: 192.168.56.12
+  cpu: 1
+  memory: 2048
+  disk_size: 10240
+
+- name: ravendb3
+  hostname: 3.ravendb.internal
+  ip_addr: 192.168.56.13
+  cpu: 1
+  memory: 2048
+  disk_size: 10240

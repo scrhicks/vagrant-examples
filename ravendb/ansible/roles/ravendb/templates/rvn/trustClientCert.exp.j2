@@ -1,0 +1,6 @@
+#!/usr/bin/expect -f
+spawn /opt/RavenDB/Server/rvn admin-channel
+expect "ravendb>"
+send "trustClientCert client {{ ravendb.rvn.trust_client_cert }}\n"
+expect "ravendb>"
+send "logout\n"
